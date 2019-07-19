@@ -55,6 +55,9 @@ class Vehicle:
         return self._vehicle['state']
 
     @property
+    def sun_roof_state(self):
+        return self._vehicle['sun_roof_state']
+    @property
     def charge(self):
         return self._charge
 
@@ -65,3 +68,4 @@ class Vehicle:
     @property
     def controls(self):
         return self._controls
+
