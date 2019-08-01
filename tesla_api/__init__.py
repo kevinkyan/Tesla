@@ -2,11 +2,13 @@ from datetime import datetime, timedelta
 import requests
 from .vehicle import Vehicle
 
+import os
+
 BASE_URL = 'https://owner-api.teslamotors.com/'
 TOKEN_URL = BASE_URL + 'oauth/token'
 API_URL = BASE_URL + 'api/1'
-TESLA_CLIENT_ID = '81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384'
-TESLA_CLIENT_SECRET = 'c7257eb71a564034f9419ee651c7d0e5f7aa6bfbd18bafb5c5c033b093bb2fa3'
+TESLA_CLIENT_SECRET = os.environ['TESLA_CLIENT_SECRET']
+TESLA_CLIENT_ID = os.environ['TESLA_CLIENT_ID']
 
 class AuthenticationError(Exception):
     def __init__(self, error):
@@ -34,9 +36,10 @@ class TeslaApp:
         response = requests.post(TOKEN_URL, data = payload)
         response_json = response.json()
 
+
         if 'response' in response_json:
             raise AuthenticationError(response_json["response"])
-
+        print(response_json)
         return response_json
 
     def _refresh_token(self, refresh_token):
@@ -79,13 +82,15 @@ class TeslaApp:
             raise ApiError(response_json['error'])
 
         return response_json['response']
-
-    def get_vehicles(self):
+    def get(self, endpoint):
         self.authenticate()
-        response = requests.get((API_URL + '/vehicles'), headers = self._get_headers())
+        response = requests.get('{}/{}'.format(API_URL, endpoint), headers = self._get_headers())
         response_json = response.json()
-
         if 'error' in response_json:
             raise ApiError(response_json['error'])
 
-        return [Vehicle(self, vehicle) for vehicle in response_json['response']]
+        return response_json['response']
+
+
+    def list_vehicles(self):
+        return [Vehicle(self, vehicle) for vehicle in self.get('vehicles')]

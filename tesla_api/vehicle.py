@@ -1,5 +1,4 @@
-STATE_VENT = 'vent'
-STATE_CLOSE = 'close'
+from .charge import Charge
 
 class Vehicle:
     def __init__(self, api_client, vehicle):
@@ -7,9 +6,9 @@ class Vehicle:
         self._vehicle = vehicle
         self._vehicle_id = vehicle['id']
 
-        # self._charge = Charge(self._api_client, vehicle['id'])
-        # self._climate = Climate(self._api_client, vehicle['id'])
-        # self._commands = Commands(self._api_client, vehicle['id'])
+        self._charge = Charge(self._api_client, vehicle['id'])
+        #self._climate = Climate(self._api_client, vehicle['id'])
+        #self._commands = Commands(self._api_client, vehicle['id'])
 
     def get_state(self):
         return self._api_client.get('vehicles/{}/data_request/vehicle_state'.format(self.id))
