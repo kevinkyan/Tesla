@@ -6,6 +6,9 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from tesla_api import TeslaApp
 import os
+//schedule for MWF 9:40 & 2:20
+//schedule for T 11:40
+//schedule for Th 1:15
 
 client = TeslaApp(os.environ['EMAIL'], os.environ['PASSWORD'])
 print(os.environ['EMAIL'], os.environ['PASSWORD'])
@@ -19,6 +22,9 @@ if 'PASSWORD' not in os.environ:
 vehicles = client.list_vehicles()
 v = vehicles[0]
 print("VIN:{}".format(v.vin))
+def prep_car(instance):
+    v.wake()
+    //heat up car
 def sunroof(instance):
         v.wake()
         v._set_sunroof_state('vent')
